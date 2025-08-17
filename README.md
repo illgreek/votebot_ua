@@ -1,29 +1,30 @@
-# Telegram Book Club Bot (Vercel Webhook)
+# Telegram Book Club Bot (Vercel + Node.js + MongoDB Atlas)
 
-## Як задеплоїти на Vercel
+## Деплой на Vercel
 
-1. **Залийте цей репозиторій на GitHub.**
-2. **Зареєструйтеся на [vercel.com](https://vercel.com/) та підключіть репозиторій.**
-3. **Вкажіть змінну оточення TELEGRAM_TOKEN** (у Vercel Dashboard → Project Settings → Environment Variables):
-   - `TELEGRAM_TOKEN=ваш_токен_бота`
-4. **Деплойте проект.**
+1. Залийте цей репозиторій на GitHub.
+2. Підключіть репозиторій до [vercel.com](https://vercel.com/).
+3. Додайте змінні оточення:
+   - `TELEGRAM_TOKEN` — токен вашого Telegram-бота
+   - `MONGODB_URI` — connection string з MongoDB Atlas
+   - `CRON_SECRET` — будь-який секретний рядок для захисту cron endpoint
+4. Деплойте проект.
 
 ## Налаштування webhook у Telegram
 
 Після деплою у вас буде URL типу:
 ```
-https://your-vercel-project.vercel.app/api
+https://your-vercel-project.vercel.app/api/index.js
 ```
 
-Зареєструйте webhook для бота (замініть `TOKEN` і `URL`):
-
+Зареєструйте webhook для бота:
 ```
-curl -F "url=https://your-vercel-project.vercel.app/api" https://api.telegram.org/botTOKEN/setWebhook
+curl -F "url=https://your-vercel-project.vercel.app/api/index.js" https://api.telegram.org/bot<YOUR_TOKEN>/setWebhook
 ```
 
 або через браузер:
 ```
-https://api.telegram.org/botTOKEN/setWebhook?url=https://your-vercel-project.vercel.app/api
+https://api.telegram.org/bot<YOUR_TOKEN>/setWebhook?url=https://your-vercel-project.vercel.app/api/index.js
 ```
 
 ## Доступні команди
@@ -32,16 +33,12 @@ https://api.telegram.org/botTOKEN/setWebhook?url=https://your-vercel-project.ver
 - `/listbooks` — список книг
 - `/poll` — створити голосування вручну
 
-> ⚠️ Автоматичне щомісячне опитування на Vercel не працює (немає фонових задач)
+## Автоматичне опитування через cron-job.org
 
-## Автоматичне щомісячне опитування через cron-job.org
-
-1. Додайте у Vercel змінні оточення:
-   - `CRON_SECRET=ваш_секрет` (будь-який складний рядок)
-2. Перейдіть на [cron-job.org](https://cron-job.org/) і створіть новий cron job:
-   - URL: `https://your-vercel-project.vercel.app/api/cron?secret=ваш_секрет&chat_id=ВАШ_CHAT_ID`
-   - Метод: POST
+1. Створіть cron job на [cron-job.org](https://cron-job.org/):
+   - URL: `https://your-vercel-project.vercel.app/api/index.js?cron=1&secret=ВАШ_СЕКРЕТ&chat_id=ВАШ_CHAT_ID`
+   - Метод: GET
    - Розклад: раз на місяць (наприклад, 1-го числа о 10:00)
-3. Готово! Тепер бот автоматично створюватиме опитування у вашій групі.
+2. Готово! Тепер бот автоматично створюватиме опитування у вашій групі.
 
-> ⚠️ Ваш chat_id можна отримати, додавши бота у групу і написавши йому, а потім подивитися update через getUpdates або тимчасово додати логування update.effective_chat.id у коді.
+> ⚠️ Ваш chat_id можна отримати, додавши бота у групу і подивившись update.effective_chat.id через логування або /listbooks.
