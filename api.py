@@ -125,8 +125,7 @@ def handler(event, context):
             params = event.get('queryStringParameters') or {}
             if params.get('secret') != CRON_SECRET:
                 return {'statusCode': 403, 'body': 'Forbidden'}
-            # Вкажіть chat_id вашої групи!
-            chat_id = os.environ.get('CLUB_CHAT_ID')
+            chat_id = params.get('chat_id')
             if not chat_id:
                 return {'statusCode': 400, 'body': 'No chat_id'}
             ok = create_poll(chat_id)

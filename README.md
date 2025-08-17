@@ -37,12 +37,11 @@ https://api.telegram.org/botTOKEN/setWebhook?url=https://your-vercel-project.ver
 ## Автоматичне щомісячне опитування через cron-job.org
 
 1. Додайте у Vercel змінні оточення:
-   - `CLUB_CHAT_ID=ваш_чат_id` (ID групи, куди бот має надсилати опитування)
    - `CRON_SECRET=ваш_секрет` (будь-який складний рядок)
 2. Перейдіть на [cron-job.org](https://cron-job.org/) і створіть новий cron job:
-   - URL: `https://your-vercel-project.vercel.app/api/cron?secret=ваш_секрет`
+   - URL: `https://your-vercel-project.vercel.app/api/cron?secret=ваш_секрет&chat_id=ВАШ_CHAT_ID`
    - Метод: POST
    - Розклад: раз на місяць (наприклад, 1-го числа о 10:00)
 3. Готово! Тепер бот автоматично створюватиме опитування у вашій групі.
 
-> ⚠️ Ваш чат_id можна отримати, додавши бота у групу і написавши йому, а потім подивитися update через getUpdates або тимчасово додати логування update.effective_chat.id у коді.
+> ⚠️ Ваш chat_id можна отримати, додавши бота у групу і написавши йому, а потім подивитися update через getUpdates або тимчасово додати логування update.effective_chat.id у коді.
